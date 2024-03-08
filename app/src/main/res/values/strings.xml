@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Кинокаталог</string>
+    <string name="login">Вход в аккаунт</string>
+    <string name="firstname">Имя</string>
+    <string name="lastname">Фамилия</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="button_login">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="already_an_user_login">Уже зарегистрированы? Вход в аккаунт</string>
+    <string name="not_yet_registered_sing_up">Создать новый аккаунт</string>
+    <string name="email">Электронная почта</string>
+    <string name="re_password">Повторите пароль</string>
+    <string name="profile">Профиль</string>
+    <string name="edit">Редактировать</string>
+    <string name="sign_out">Выйти из аккаунта</string>
+    <string name="favorite">Избранное</string>
+    <string name="catalog">Список фильмов</string>
+    <string name="profile_birth_date">Дата рождения</string>
+    <string name="description">Описание</string>
+    <string name="delete_user_button">Удалить аккаунт</string>
+</resources>
