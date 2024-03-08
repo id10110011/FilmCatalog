@@ -19,4 +19,5 @@
     <string name="profile_birth_date">Дата рождения</string>
     <string name="description">Описание</string>
     <string name="delete_user_button">Удалить аккаунт</string>
+    <string name="search_view_hint">Поиск</string>
 </resources>

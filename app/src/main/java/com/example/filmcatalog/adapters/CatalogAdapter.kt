@@ -39,21 +39,4 @@ class CatalogAdapter(context: Context, movies: ArrayList<Movie>) :
 
         return view
     }
-
-    override fun getFilter(): Filter {
-        /*val filter = object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val filterResults = FilterResults()
-                if (constraint.isNullOrEmpty()) {
-                    filterResults.count = count
-                    filterResults.values =
-                }
-            }
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                TODO("Not yet implemented")
-            }
-        }*/
-        return super.getFilter()
-    }
 }

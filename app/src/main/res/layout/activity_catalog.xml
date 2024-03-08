@@ -36,6 +36,22 @@
             />
     </LinearLayout>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="20dp"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="5dp">
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search_view_hint"
+            android:queryBackground="@android:color/transparent"
+            android:id="@+id/search_view"
+            />
+    </androidx.cardview.widget.CardView>
+
     <GridView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
