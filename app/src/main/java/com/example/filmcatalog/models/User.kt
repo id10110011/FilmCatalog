@@ -7,6 +7,9 @@ class User {
     var lastname: String = ""
     var dateOfBirth: String = ""
     var description: String = ""
+    var country: String = ""
+    var city: String = ""
+    var education: String = ""
 
     constructor()
 
@@ -28,6 +31,9 @@ class User {
         firstname: String,
         lastname: String,
         dateOfBirth: String,
+        city: String,
+        country: String,
+        education: String,
         description: String
     ) {
         this.email = email
@@ -35,6 +41,9 @@ class User {
         this.firstname = firstname
         this.lastname = lastname
         this.dateOfBirth = dateOfBirth
+        this.city = city
+        this.country = country
+        this.education = education
         this.description = description
     }
 

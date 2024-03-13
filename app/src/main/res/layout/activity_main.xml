@@ -5,119 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
     tools:context=".activities.MainActivity">
 
-    <TextView
+    <FrameLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
+        android:id="@+id/frame_container" />
 
-        android:id="@+id/app_name"
-        android:text="Кинокаталог"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:background="@color/md_theme_dark_background"
-        />
-
-    <ScrollView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            >
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:id="@+id/catalog_box"
-                android:layout_marginBottom="30dp"
-                android:padding="5dp"
-                >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon_movie"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-
-                    android:src="@drawable/ic_movie"
-
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/catalog"
-                    android:text="Список фильмов"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:id="@+id/favorites_box"
-                android:layout_marginBottom="30dp"
-                android:padding="5dp"
-                >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon_bookmarks"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-
-                    android:src="@drawable/ic_bookmarks"
-
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/favorites"
-                    android:text="Избранное"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:id="@+id/profile_box"
-                android:layout_marginBottom="30dp"
-                android:padding="5dp"
-                    >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon_profile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-
-                    android:src="@drawable/ic_profile"
-
-                    />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/profile"
-                    android:text="Профиль"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        android:id="@+id/bottom_menu"
+        app:menu="@menu/bottom_menu"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:itemActiveIndicatorStyle="@style/ShapeAppearance.Material3.NavigationBarView.ActiveIndicator"/>
 </LinearLayout>

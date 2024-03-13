@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) {task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Вы вошли в аккаунт", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, CatalogActivity::class.java))
+                            startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {
                             Toast.makeText(this, "Некорректная электронная почта или пароль", Toast.LENGTH_SHORT).show()

@@ -1,6 +1,5 @@
 package com.example.filmcatalog.activities
 
-import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,20 +23,13 @@ class MovieActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMovieBinding
     private lateinit var pageChangeListener: ViewPager2.OnPageChangeCallback
 
-    private val collectionFavs = "favorites"
+    private val collectionFavorites = "favorites"
     private val collectionMovies = "movies"
     private lateinit var db: FirebaseFirestore
     private lateinit var collectionRefFavs: CollectionReference
     private lateinit var movieDocumentReference: DocumentReference
 
     private lateinit var firebaseAuth: FirebaseAuth
-
-    private val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            setMargins(8, 0, 8, 0)
-        }
 
     private lateinit var docName: String
     private lateinit var userEmail: String
@@ -51,7 +43,7 @@ class MovieActivity : AppCompatActivity() {
         userEmail = firebaseAuth.currentUser?.email.toString()
 
         db = FirebaseFirestore.getInstance()
-        collectionRefFavs = db.collection(collectionFavs)
+        collectionRefFavs = db.collection(collectionFavorites)
 
         initPage()
         setImageToButtonFavorite()
@@ -155,10 +147,15 @@ class MovieActivity : AppCompatActivity() {
     }
 
     private fun initSlider(size: Int) {
+        val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8, 0, 8, 0)
+            }
         val dotsImage = Array(size) {
             ImageView(this)
         }
-
         dotsImage.forEach {
             it.setImageResource(
                 R.drawable.non_active_dot
@@ -167,7 +164,6 @@ class MovieActivity : AppCompatActivity() {
         }
 
         dotsImage[0].setImageResource(R.drawable.active_dot)
-
         initPageChangeListener(dotsImage)
     }
 

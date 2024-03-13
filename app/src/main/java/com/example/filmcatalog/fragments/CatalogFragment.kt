@@ -1,14 +1,17 @@
-package com.example.filmcatalog.activities
+package com.example.filmcatalog.fragments
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.example.filmcatalog.activities.MovieActivity
 import com.example.filmcatalog.adapters.CatalogAdapter
-import com.example.filmcatalog.databinding.ActivityCatalogBinding
+import com.example.filmcatalog.databinding.FragmentCatalogBinding
 import com.example.filmcatalog.models.Movie
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -16,15 +19,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 
-
-class CatalogActivity : AppCompatActivity() {
+class CatalogFragment : Fragment() {
     private val collectionName = "movies"
 
-    private lateinit var binding: ActivityCatalogBinding
+    private lateinit var binding: FragmentCatalogBinding
     private lateinit var catalogAdapter: CatalogAdapter
 
     private lateinit var firebaseAuth: FirebaseAuth
-
     private lateinit var db: FirebaseFirestore
     private lateinit var collectionReference: CollectionReference
 
@@ -33,22 +34,21 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCatalogBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+        binding = FragmentCatalogBinding.inflate(layoutInflater)
         firebaseAuth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         collectionReference = db.collection(collectionName)
         storage = FirebaseStorage.getInstance()
 
-        if (firebaseAuth.currentUser == null) {
-            firebaseAuth.signOut()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        }
-
         initGridItems()
         setListeners()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return binding.root
     }
 
     private fun initGridItems() {
@@ -61,11 +61,10 @@ class CatalogActivity : AppCompatActivity() {
                         docNames.add(doc.id)
                         val movie = doc.toObject(Movie::class.java)
                         movies.add(Movie(movie))
-
                     }
 
                     catalogAdapter = CatalogAdapter(
-                        this@CatalogActivity,
+                        requireActivity(),
                         movies.clone() as ArrayList<Movie>
                     )
                     binding.gridView.adapter = catalogAdapter
@@ -73,7 +72,7 @@ class CatalogActivity : AppCompatActivity() {
 
                     binding.gridView.onItemClickListener =
                         AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                            val intent = Intent(this, MovieActivity::class.java)
+                            val intent = Intent(activity, MovieActivity::class.java)
                             intent.putExtra("name", movies[i].name)
                             intent.putExtra("description", movies[i].description)
                             intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
@@ -84,7 +83,7 @@ class CatalogActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
             }
     }
 
@@ -102,15 +101,6 @@ class CatalogActivity : AppCompatActivity() {
     }
 
     private fun setListeners() {
-        binding.navMenu.menuCatalog.setCardBackgroundColor(Color.parseColor("#3F484A"))
-        binding.navMenu.menuFavorites.setOnClickListener {
-            startActivity(Intent(this, FavoritesActivity::class.java))
-            finish()
-        }
-        binding.navMenu.menuProfile.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-            finish()
-        }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -123,4 +113,5 @@ class CatalogActivity : AppCompatActivity() {
 
         })
     }
+
 }

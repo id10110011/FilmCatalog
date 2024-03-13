@@ -1,13 +1,16 @@
-package com.example.filmcatalog.activities
+package com.example.filmcatalog.fragments
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.example.filmcatalog.activities.MovieActivity
 import com.example.filmcatalog.adapters.CatalogAdapter
-import com.example.filmcatalog.databinding.ActivityFavoritesBinding
+import com.example.filmcatalog.databinding.FragmentFavoritesBinding
 import com.example.filmcatalog.models.Movie
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -16,9 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 
-class FavoritesActivity : AppCompatActivity() {
+class FavoritesFragment : Fragment() {
 
-    private lateinit var binding: ActivityFavoritesBinding
+    private lateinit var binding: FragmentFavoritesBinding
     private lateinit var catalogAdapter: CatalogAdapter
 
     private lateinit var firebaseAuth: FirebaseAuth
@@ -34,15 +37,19 @@ class FavoritesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFavoritesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = FragmentFavoritesBinding.inflate(layoutInflater)
 
         firebaseAuth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         collectionReference = db.collection(collectionName)
         storage = FirebaseStorage.getInstance()
+    }
 
-        setListeners()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return binding.root
     }
 
     override fun onResume() {
@@ -62,7 +69,7 @@ class FavoritesActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, it.localizedMessage + userEmail, Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, it.localizedMessage + userEmail, Toast.LENGTH_LONG).show()
             }
     }
 
@@ -74,14 +81,14 @@ class FavoritesActivity : AppCompatActivity() {
                     val movie = it.result.toObject(Movie::class.java)
                     movies.add(Movie(movie!!))
 
-                    catalogAdapter = CatalogAdapter(this@FavoritesActivity, movies)
+                    catalogAdapter = CatalogAdapter(requireActivity(), movies)
                     catalogAdapter.notifyDataSetChanged()
                     binding.gridView.adapter = catalogAdapter
                     binding.gridView.isClickable = true
 
                     binding.gridView.onItemClickListener =
                         AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                            val intent = Intent(this, MovieActivity::class.java)
+                            val intent = Intent(activity, MovieActivity::class.java)
                             intent.putExtra("name", movies[i].name)
                             intent.putExtra("description", movies[i].description)
                             intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
@@ -92,20 +99,8 @@ class FavoritesActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, it.localizedMessage + "damndamdanmda", Toast.LENGTH_LONG)
+                Toast.makeText(activity, it.localizedMessage + "damndamdanmda", Toast.LENGTH_LONG)
                     .show()
             }
-    }
-
-    private fun setListeners() {
-        binding.navMenu.menuFavorites.setCardBackgroundColor(Color.parseColor("#3F484A"))
-        binding.navMenu.menuCatalog.setOnClickListener {
-            startActivity(Intent(this, CatalogActivity::class.java))
-            finish()
-        }
-        binding.navMenu.menuProfile.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-            finish()
-        }
     }
 }
