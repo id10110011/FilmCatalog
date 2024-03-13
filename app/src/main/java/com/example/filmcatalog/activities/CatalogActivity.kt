@@ -1,7 +1,7 @@
 package com.example.filmcatalog.activities
 
-import android.R.attr.data
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.SearchView
@@ -41,6 +41,12 @@ class CatalogActivity : AppCompatActivity() {
         collectionReference = db.collection(collectionName)
         storage = FirebaseStorage.getInstance()
 
+        if (firebaseAuth.currentUser == null) {
+            firebaseAuth.signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
         initGridItems()
         setListeners()
     }
@@ -58,7 +64,8 @@ class CatalogActivity : AppCompatActivity() {
 
                     }
 
-                    catalogAdapter = CatalogAdapter(this@CatalogActivity,
+                    catalogAdapter = CatalogAdapter(
+                        this@CatalogActivity,
                         movies.clone() as ArrayList<Movie>
                     )
                     binding.gridView.adapter = catalogAdapter
@@ -87,14 +94,21 @@ class CatalogActivity : AppCompatActivity() {
         filteredList.addAll(movies)
         catalogAdapter.clear()
         if (!clearQuery.isNullOrEmpty()) {
-            filteredList = filteredList.filter { it.name.lowercase().contains(clearQuery) } as ArrayList<Movie>
+            filteredList =
+                filteredList.filter { it.name.lowercase().contains(clearQuery) } as ArrayList<Movie>
         }
         catalogAdapter.addAll(filteredList)
         catalogAdapter.notifyDataSetChanged()
     }
 
     private fun setListeners() {
-        binding.menuButton.setOnClickListener {
+        binding.navMenu.menuCatalog.setCardBackgroundColor(Color.parseColor("#3F484A"))
+        binding.navMenu.menuFavorites.setOnClickListener {
+            startActivity(Intent(this, FavoritesActivity::class.java))
+            finish()
+        }
+        binding.navMenu.menuProfile.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
             finish()
         }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

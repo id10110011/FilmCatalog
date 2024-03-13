@@ -20,4 +20,10 @@
     <string name="description">Описание</string>
     <string name="delete_user_button">Удалить аккаунт</string>
     <string name="search_view_hint">Поиск</string>
+    <string name="city">Город</string>
+    <string name="country">Страна</string>
+    <string name="gender">Пол</string>
+    <string name="education">Образование</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

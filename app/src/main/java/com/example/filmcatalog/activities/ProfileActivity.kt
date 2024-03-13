@@ -2,6 +2,7 @@ package com.example.filmcatalog.activities
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -59,20 +60,27 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setListeners() {
+        binding.navMenu.menuProfile.setCardBackgroundColor(Color.parseColor("#3F484A"))
         binding.editButton.setOnClickListener {
             saveUser()
         }
         binding.signoutButton.setOnClickListener {
             signOut()
         }
-        binding.menuButton.setOnClickListener {
-            finish()
-        }
+
         binding.dateButton.setOnClickListener {
             showDatePicker()
         }
         binding.deleteUserButton.setOnClickListener {
             showSubmitDeleteUserDialog()
+        }
+        binding.navMenu.menuFavorites.setOnClickListener {
+            startActivity(Intent(this, FavoritesActivity::class.java))
+            finish()
+        }
+        binding.navMenu.menuCatalog.setOnClickListener {
+            startActivity(Intent(this, CatalogActivity::class.java))
+            finish()
         }
     }
 

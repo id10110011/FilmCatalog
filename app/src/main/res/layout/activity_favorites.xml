@@ -7,39 +7,15 @@
     android:orientation="vertical"
     tools:context=".activities.FavoritesActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@color/md_theme_dark_background">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/menu_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-
-            android:src="@drawable/ic_arrow_back_android"
-
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/favorites"
-            android:layout_marginLeft="10dp"
-
-            android:text="@string/favorite"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            />
-    </LinearLayout>
 
     <GridView
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/grid_view"
         android:numColumns="2" />
+
+    <include layout="@layout/nav_menu"
+        android:id="@+id/nav_menu"/>
 
 </LinearLayout>

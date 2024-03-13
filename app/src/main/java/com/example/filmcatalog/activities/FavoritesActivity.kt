@@ -1,12 +1,12 @@
 package com.example.filmcatalog.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.filmcatalog.adapters.CatalogAdapter
-import com.example.filmcatalog.databinding.ActivityCatalogBinding
 import com.example.filmcatalog.databinding.ActivityFavoritesBinding
 import com.example.filmcatalog.models.Movie
 import com.google.firebase.auth.FirebaseAuth
@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 
-class  FavoritesActivity : AppCompatActivity() {
+class FavoritesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavoritesBinding
     private lateinit var catalogAdapter: CatalogAdapter
@@ -37,16 +37,12 @@ class  FavoritesActivity : AppCompatActivity() {
         binding = ActivityFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.menuButton.setOnClickListener {
-            finish()
-        }
-
         firebaseAuth = FirebaseAuth.getInstance()
-
         db = FirebaseFirestore.getInstance()
         collectionReference = db.collection(collectionName)
-
         storage = FirebaseStorage.getInstance()
+
+        setListeners()
     }
 
     override fun onResume() {
@@ -96,7 +92,20 @@ class  FavoritesActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, it.localizedMessage + "damndamdanmda", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, it.localizedMessage + "damndamdanmda", Toast.LENGTH_LONG)
+                    .show()
             }
+    }
+
+    private fun setListeners() {
+        binding.navMenu.menuFavorites.setCardBackgroundColor(Color.parseColor("#3F484A"))
+        binding.navMenu.menuCatalog.setOnClickListener {
+            startActivity(Intent(this, CatalogActivity::class.java))
+            finish()
+        }
+        binding.navMenu.menuProfile.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+            finish()
+        }
     }
 }
