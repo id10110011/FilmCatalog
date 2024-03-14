@@ -2,13 +2,15 @@ package com.example.filmcatalog.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.filmcatalog.R
 import com.example.filmcatalog.activities.MovieActivity
 import com.example.filmcatalog.adapters.CatalogAdapter
 import com.example.filmcatalog.databinding.FragmentCatalogBinding
@@ -63,12 +65,14 @@ class CatalogFragment : Fragment() {
                         movies.add(Movie(movie))
                     }
 
-                    catalogAdapter = CatalogAdapter(
-                        requireActivity(),
-                        movies.clone() as ArrayList<Movie>
-                    )
-                    binding.gridView.adapter = catalogAdapter
-                    binding.gridView.isClickable = true
+                    if (isAdded) {
+                        catalogAdapter = CatalogAdapter(
+                            requireActivity(),
+                            movies.clone() as ArrayList<Movie>
+                        )
+                        binding.gridView.adapter = catalogAdapter
+                        binding.gridView.isClickable = true
+                    }
 
                     binding.gridView.onItemClickListener =
                         AdapterView.OnItemClickListener { adapterView, view, i, l ->

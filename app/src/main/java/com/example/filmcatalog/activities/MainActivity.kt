@@ -3,6 +3,7 @@ package com.example.filmcatalog.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.filmcatalog.R
 import com.example.filmcatalog.databinding.ActivityMainBinding
@@ -41,16 +42,21 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(FavoritesFragment())
                     true
                 }
-                R.id.menu_profile-> {
+                R.id.menu_profile -> {
                     replaceFragment(ProfileFragment())
                     true
                 }
-                else -> false
+                else -> {
+                    false
+                }
             }
         }
     }
 
     private fun replaceFragment(fragment: Fragment) {
+        binding.progressBar.visibility = View.VISIBLE
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
     }
+
+
 }

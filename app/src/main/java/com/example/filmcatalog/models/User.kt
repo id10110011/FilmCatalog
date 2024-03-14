@@ -1,15 +1,18 @@
 package com.example.filmcatalog.models
 
-class User {
+import java.io.Serializable
+
+class User : Serializable {
     lateinit var email: String
     lateinit var password: String
     var firstname: String = ""
     var lastname: String = ""
     var dateOfBirth: String = ""
-    var description: String = ""
     var country: String = ""
     var city: String = ""
+    var gender: String = ""
     var education: String = ""
+    var description: String = ""
 
     constructor()
 
@@ -33,6 +36,7 @@ class User {
         dateOfBirth: String,
         city: String,
         country: String,
+        gender: String,
         education: String,
         description: String
     ) {
@@ -43,6 +47,7 @@ class User {
         this.dateOfBirth = dateOfBirth
         this.city = city
         this.country = country
+        this.gender = gender
         this.education = education
         this.description = description
     }

@@ -13,7 +13,7 @@
         android:layout_height="55dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/md_theme_dark_background">
+        android:background="@color/black">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/back_button"

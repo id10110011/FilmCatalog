@@ -81,10 +81,12 @@ class FavoritesFragment : Fragment() {
                     val movie = it.result.toObject(Movie::class.java)
                     movies.add(Movie(movie!!))
 
-                    catalogAdapter = CatalogAdapter(requireActivity(), movies)
-                    catalogAdapter.notifyDataSetChanged()
-                    binding.gridView.adapter = catalogAdapter
-                    binding.gridView.isClickable = true
+                    if (isAdded) {
+                        catalogAdapter = CatalogAdapter(requireActivity(), movies)
+                        catalogAdapter.notifyDataSetChanged()
+                        binding.gridView.adapter = catalogAdapter
+                        binding.gridView.isClickable = true
+                    }
 
                     binding.gridView.onItemClickListener =
                         AdapterView.OnItemClickListener { adapterView, view, i, l ->
