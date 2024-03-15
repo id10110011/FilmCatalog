@@ -1,17 +1,21 @@
 package com.example.filmcatalog.activities
 
+import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.filmcatalog.R
 import com.example.filmcatalog.adapters.ImageAdapter
+import com.example.filmcatalog.adapters.ReviewsAdapter
 import com.example.filmcatalog.databinding.ActivityMovieBinding
+import com.example.filmcatalog.models.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -22,6 +26,7 @@ class MovieActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMovieBinding
     private lateinit var pageChangeListener: ViewPager2.OnPageChangeCallback
+    private lateinit var reviewsAdapter: ReviewsAdapter
 
     private val collectionFavorites = "favorites"
     private val collectionMovies = "movies"
@@ -33,6 +38,8 @@ class MovieActivity : AppCompatActivity() {
 
     private lateinit var docName: String
     private lateinit var userEmail: String
+    private lateinit var reviewsMap: List<Map<String, Any>>
+    private lateinit var reviews: List<Review>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +47,81 @@ class MovieActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        userEmail = firebaseAuth.currentUser?.email.toString()
+        if (firebaseAuth.currentUser == null) {
+            firebaseAuth.signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        } else {
+            userEmail = firebaseAuth.currentUser!!.email.toString()
+        }
 
         db = FirebaseFirestore.getInstance()
         collectionRefFavs = db.collection(collectionFavorites)
 
+        reviews = ArrayList<Review>()
         initPage()
         setImageToButtonFavorite()
         setListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        db.collection(collectionMovies).document(docName).get(Source.DEFAULT)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    if (it.result.get("reviews") != null) {
+                        reviewsMap = it.result.get("reviews") as List<Map<String, Any>>
+                        reviews = convertMapToArrayList(reviewsMap)
+                    }
+                    setUserReview()
+                }
+
+            }
+
+    }
+
+    private fun setUserReview() {
+        val review = isUserReview(reviews, userEmail)
+        if (review != null) {
+            binding.rateMovieText.text = resources.getString(R.string.your_review)
+            binding.rateMovieView.visibility = View.GONE
+            binding.userReview.userReviewContainer.visibility = View.VISIBLE
+            fillUserReview(review)
+        } else {
+            binding.rateMovieText.text = resources.getString(R.string.rate_movie)
+            binding.rateMovieView.visibility = View.VISIBLE
+            binding.userReview.userReviewContainer.visibility = View.GONE
+        }
+    }
+
+    private fun fillUserReview(review: Review) {
+        binding.userReview.reviewItemAuthor.text = review.author
+        binding.userReview.reviewItemText.text = review.text
+        binding.userReview.reviewItemRating.rating = review.rating
+        binding.userReview.reviewItemCreatedDate.text = review.createdDate
+    }
+
+    private fun isUserReview(reviews: List<Review>, email: String): Review? {
+        for (review in reviews) {
+            if (review.authorEmail == email) {
+                return review
+            }
+        }
+        return null
+    }
+
+    private fun convertMapToArrayList(reviewsMap: List<Map<String, Any>>): ArrayList<Review> {
+        val reviews = ArrayList<Review>()
+        for (reviewMap in reviewsMap) {
+            reviews.add(
+                Review(
+                    reviewMap["author"].toString(), reviewMap["authorEmail"].toString(), reviewMap["text"].toString(),
+                    reviewMap["createdDate"].toString(), (reviewMap["rating"] as Number).toFloat()
+                )
+            )
+        }
+        return reviews
     }
 
     private fun setImageToButtonFavorite() {
@@ -74,7 +148,15 @@ class MovieActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             finish()
         }
-
+        binding.rateMovieBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+            startRateMovieActivity()
+        }
+        binding.rateMovieReview.setOnClickListener {
+            startRateMovieActivity()
+        }
+        binding.userReview.reviewItemEdit.setOnClickListener {
+            startRateMovieActivity()
+        }
         binding.addToFavoritesButton.setOnClickListener {
             collectionRefFavs.document(userEmail).get(Source.DEFAULT)
                 .addOnCompleteListener {
@@ -97,11 +179,20 @@ class MovieActivity : AppCompatActivity() {
         }
     }
 
+    private fun startRateMovieActivity() {
+        val intent = Intent(this, RateMovieActivity::class.java)
+        intent.putExtra("movieDoc", docName)
+        intent.putExtra("text", binding.userReview.reviewItemText.text.toString())
+        intent.putExtra("rating", binding.userReview.reviewItemRating.rating)
+        startActivity(intent)
+    }
+
     private fun setReferenceArray(refArray: ArrayList<DocumentReference>) {
         collectionRefFavs.document(userEmail).set(
             mapOf(
                 "refArray" to refArray
-            ))
+            )
+        )
             .addOnCompleteListener {
                 finish()
                 startActivity(intent)
@@ -121,23 +212,27 @@ class MovieActivity : AppCompatActivity() {
             val description = intent.getStringExtra("description")
             val pictures = ArrayList<String>()
             intent.getStringArrayListExtra("pictureNames")?.let { pictures.addAll(it) }
-            val pictureNames = pictures.subList(1, pictures.size)
+            val pictureNames = if (pictures.size > 1) {
+                pictures.subList(1, pictures.size)
+            } else {
+                ArrayList()
+            }
 
-            fillMovieFields(name!!, description!!, pictures[0])
+            fillMovieFields(name!!, description!!, pictures)
             initAdapter(pictureNames)
             initSlider(pictureNames.size)
-
-            binding.viewPager.registerOnPageChangeCallback(pageChangeListener)
         }
     }
 
-    private fun fillMovieFields(name: String, description: String, iconUrl: String) {
+    private fun fillMovieFields(name: String, description: String, pictureNames: MutableList<String>) {
         binding.movieName.text = name
         binding.movieDescription.text = description
-        Glide.with(this)
-            .load(Uri.parse(iconUrl))
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(binding.movieIcon)
+        if (pictureNames.isNotEmpty()) {
+            Glide.with(this)
+                .load(Uri.parse(pictureNames[0]))
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .into(binding.movieIcon)
+        }
     }
 
     private fun initAdapter(pictureNames: MutableList<String>) {
@@ -148,11 +243,11 @@ class MovieActivity : AppCompatActivity() {
 
     private fun initSlider(size: Int) {
         val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8, 0, 8, 0)
-            }
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            setMargins(8, 0, 8, 0)
+        }
         val dotsImage = Array(size) {
             ImageView(this)
         }
@@ -163,8 +258,11 @@ class MovieActivity : AppCompatActivity() {
             binding.viewPagerDots.addView(it, params)
         }
 
-        dotsImage[0].setImageResource(R.drawable.active_dot)
+        if (size > 0) {
+            dotsImage[0].setImageResource(R.drawable.active_dot)
+        }
         initPageChangeListener(dotsImage)
+        binding.viewPager.registerOnPageChangeCallback(pageChangeListener)
     }
 
     private fun initPageChangeListener(dotsImage: Array<ImageView>) {
@@ -184,10 +282,5 @@ class MovieActivity : AppCompatActivity() {
                 super.onPageSelected(position)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.viewPager.unregisterOnPageChangeCallback(pageChangeListener)
     }
 }

@@ -57,4 +57,7 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
     </style>
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorControlActivated">@color/white</item>
+    </style>
 </resources>

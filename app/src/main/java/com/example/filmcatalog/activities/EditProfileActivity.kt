@@ -1,6 +1,7 @@
 package com.example.filmcatalog.activities
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -34,6 +35,12 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
+        if (firebaseAuth.currentUser == null) {
+            firebaseAuth.signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
         db = FirebaseFirestore.getInstance()
         collectionReference = db.collection(collectionUsers)
         genderValues = resources.getStringArray(R.array.gender_values)

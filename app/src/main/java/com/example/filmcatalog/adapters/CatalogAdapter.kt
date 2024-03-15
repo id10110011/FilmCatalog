@@ -16,24 +16,25 @@ import com.example.filmcatalog.models.Movie
 import com.example.filmcatalog.R
 
 class CatalogAdapter(context: Context, movies: ArrayList<Movie>) :
-    ArrayAdapter<Movie>(context, R.layout.grid_item, movies),
-    Filterable {
+    ArrayAdapter<Movie>(context, R.layout.grid_item, movies) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
-        val movie = getItem(position)
+        val movie = getItem(position)!!
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false)
+            view = LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false)!!
         }
 
-        val gridCaption = view!!.findViewById<TextView>(R.id.grid_caption)
+        val gridCaption = view.findViewById<TextView>(R.id.grid_caption)
         val gridImage = view.findViewById<ImageView>(R.id.grid_image)
 
-        Glide.with(context)
-            .load(Uri.parse(movie!!.pictureNames[0]))
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(gridImage)
+        if (movie.pictureNames.isNotEmpty()) {
+            Glide.with(context)
+                .load(Uri.parse(movie.pictureNames[0]))
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .into(gridImage)
+        }
 
         gridCaption.text = movie.name + "\n"
 

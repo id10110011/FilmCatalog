@@ -6,15 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.filmcatalog.R
 import com.example.filmcatalog.activities.MovieActivity
 import com.example.filmcatalog.adapters.CatalogAdapter
 import com.example.filmcatalog.databinding.FragmentCatalogBinding
 import com.example.filmcatalog.models.Movie
+import com.example.filmcatalog.models.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -72,18 +71,17 @@ class CatalogFragment : Fragment() {
                         )
                         binding.gridView.adapter = catalogAdapter
                         binding.gridView.isClickable = true
+                        binding.gridView.onItemClickListener =
+                            AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                                val intent = Intent(activity, MovieActivity::class.java)
+                                intent.putExtra("name", movies[i].name)
+                                intent.putExtra("description", movies[i].description)
+                                intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
+                                intent.putExtra("docName", docNames[i])
+
+                                startActivity(intent)
+                            }
                     }
-
-                    binding.gridView.onItemClickListener =
-                        AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                            val intent = Intent(activity, MovieActivity::class.java)
-                            intent.putExtra("name", movies[i].name)
-                            intent.putExtra("description", movies[i].description)
-                            intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
-                            intent.putExtra("docName", docNames[i])
-
-                            startActivity(intent)
-                        }
                 }
             }
             .addOnFailureListener {

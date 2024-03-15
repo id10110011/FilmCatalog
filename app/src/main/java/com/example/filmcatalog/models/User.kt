@@ -51,6 +51,4 @@ class User : Serializable {
         this.education = education
         this.description = description
     }
-
-
 }

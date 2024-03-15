@@ -29,7 +29,6 @@ class FavoritesFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var collectionReference: CollectionReference
 
-    private lateinit var storage: FirebaseStorage
     private lateinit var movies: ArrayList<Movie>
     private lateinit var docNames: ArrayList<String>
 
@@ -42,7 +41,6 @@ class FavoritesFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         collectionReference = db.collection(collectionName)
-        storage = FirebaseStorage.getInstance()
     }
 
     override fun onCreateView(
@@ -57,6 +55,8 @@ class FavoritesFragment : Fragment() {
 
         movies = ArrayList<Movie>()
         docNames = ArrayList<String>()
+
+        initGridView()
         val userEmail = firebaseAuth.currentUser?.email.toString()
 
         collectionReference.document(userEmail).get(Source.DEFAULT)
@@ -64,44 +64,45 @@ class FavoritesFragment : Fragment() {
                 if (it.isSuccessful && it.result.get("refArray") != null) {
                     val refArray = it.result.get("refArray") as ArrayList<DocumentReference>
                     for (docRef in refArray) {
-                        initMovies(docRef)
+                        initMovie(docRef)
                     }
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(activity, it.localizedMessage + userEmail, Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG).show()
             }
     }
 
-    private fun initMovies(documentReference: DocumentReference) {
-        documentReference.get(Source.DEFAULT)
+    private fun initGridView() {
+        if (isAdded) {
+            catalogAdapter = CatalogAdapter(requireActivity(), movies)
+            binding.gridView.adapter = catalogAdapter
+            binding.gridView.isClickable = true
+            binding.gridView.onItemClickListener =
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                    val intent = Intent(activity, MovieActivity::class.java)
+                    intent.putExtra("name", movies[i].name)
+                    intent.putExtra("description", movies[i].description)
+                    intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
+                    intent.putExtra("docName", docNames[i])
+
+                    startActivity(intent)
+                }
+        }
+    }
+
+    private fun initMovie(documentReference: DocumentReference) {
+        db.document(documentReference.path).get(Source.DEFAULT)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     docNames.add(it.result.id)
                     val movie = it.result.toObject(Movie::class.java)
                     movies.add(Movie(movie!!))
-
-                    if (isAdded) {
-                        catalogAdapter = CatalogAdapter(requireActivity(), movies)
-                        catalogAdapter.notifyDataSetChanged()
-                        binding.gridView.adapter = catalogAdapter
-                        binding.gridView.isClickable = true
-                    }
-
-                    binding.gridView.onItemClickListener =
-                        AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                            val intent = Intent(activity, MovieActivity::class.java)
-                            intent.putExtra("name", movies[i].name)
-                            intent.putExtra("description", movies[i].description)
-                            intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
-                            intent.putExtra("docName", docNames[i])
-
-                            startActivity(intent)
-                        }
+                    catalogAdapter.notifyDataSetChanged()
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(activity, it.localizedMessage + "damndamdanmda", Toast.LENGTH_LONG)
+                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG)
                     .show()
             }
     }
