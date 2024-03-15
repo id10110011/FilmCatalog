@@ -33,10 +33,9 @@ class Movie {
         this.description = description
         this.pictureNames = pictureNames
         this.reviews = reviews
-        this.rating = countRating(reviews)
     }
 
-    private fun countRating(reviews: ArrayList<Review>): Float {
-        return ((reviews.sumOf { it.rating.toDouble() } / reviews.size).toFloat())
+    fun countRating() {
+        this.rating = ((reviews.sumOf { it.rating.toDouble() } / reviews.size).toFloat())
     }
 }
