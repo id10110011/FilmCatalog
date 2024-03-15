@@ -26,7 +26,6 @@ class MovieActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMovieBinding
     private lateinit var pageChangeListener: ViewPager2.OnPageChangeCallback
-    private lateinit var reviewsAdapter: ReviewsAdapter
 
     private val collectionFavorites = "favorites"
     private val collectionMovies = "movies"
@@ -156,6 +155,11 @@ class MovieActivity : AppCompatActivity() {
         }
         binding.userReview.reviewItemEdit.setOnClickListener {
             startRateMovieActivity()
+        }
+        binding.showReviewsButton.setOnClickListener {
+            val intent = Intent(this, ReviewsActivity::class.java)
+            intent.putExtra("movieDocName", docName)
+            startActivity(intent)
         }
         binding.addToFavoritesButton.setOnClickListener {
             collectionRefFavs.document(userEmail).get(Source.DEFAULT)

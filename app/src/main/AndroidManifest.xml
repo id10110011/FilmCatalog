@@ -15,6 +15,9 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ReviewsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.RateMovieActivity"
             android:exported="false" />
         <activity
