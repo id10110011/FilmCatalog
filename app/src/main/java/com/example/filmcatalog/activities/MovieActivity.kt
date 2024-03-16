@@ -231,6 +231,13 @@ class MovieActivity : AppCompatActivity() {
                 ArrayList()
             }
 
+            if (pictureNames.isEmpty()) {
+                binding.moviePicsCaption.visibility = View.GONE
+                binding.moviePicsContainer.visibility = View.GONE
+            } else {
+                binding.moviePicsCaption.visibility = View.VISIBLE
+                binding.moviePicsContainer.visibility = View.VISIBLE
+            }
             fillMovieFields(name!!, description!!, pictures)
             initAdapter(pictureNames)
             initSlider(pictureNames.size)

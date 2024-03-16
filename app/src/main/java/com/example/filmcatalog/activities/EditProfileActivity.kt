@@ -93,6 +93,7 @@ class EditProfileActivity : AppCompatActivity() {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         Toast.makeText(this, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
                 }
                 .addOnFailureListener {
@@ -125,7 +126,6 @@ class EditProfileActivity : AppCompatActivity() {
         }
         binding.saveButton.setOnClickListener {
             saveUser()
-            finish()
         }
         binding.dateButton.setOnClickListener {
             showDatePicker()

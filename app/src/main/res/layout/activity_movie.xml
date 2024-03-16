@@ -95,13 +95,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/movie_pic_caption"
+                android:id="@+id/movie_pics_caption"
                 android:text="@string/pictures"
                 android:textSize="25sp"
                 android:paddingHorizontal="20dp"
                 />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/movie_pics_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
