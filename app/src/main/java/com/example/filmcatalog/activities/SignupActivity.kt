@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.filmcatalog.databinding.ActivitySignupBinding
 import com.example.filmcatalog.models.User
+import com.example.filmcatalog.utils.ValidationUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,9 +47,9 @@ class SignupActivity : AppCompatActivity() {
         val password = binding.signupPassword.text.toString()
         val rePassword = binding.signupRepassword.text.toString()
 
-        if (validateEmail(email) &&
-            validateName(name) &&
-            validatePasswords(password, rePassword))
+        if (ValidationUtil.validateEmail(this, email) &&
+            ValidationUtil.validateName(this, name) &&
+            ValidationUtil.validatePasswords(this, password, rePassword))
         {
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) {task ->
@@ -71,34 +72,5 @@ class SignupActivity : AppCompatActivity() {
                     Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
                 }
         }
-    }
-
-    private fun validateEmail(email: String): Boolean {
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Некорректная электронная почта", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
-    }
-
-    private fun validateName(name: String): Boolean {
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Введите имя", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
-    }
-
-    private fun validatePasswords(password: String, rePassword: String): Boolean {
-        if (password.isEmpty()) {
-            Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        if (password != rePassword) {
-            Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
     }
 }

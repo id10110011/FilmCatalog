@@ -64,6 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
+                    android:maxLength="80"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/white" >
@@ -97,6 +98,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/lastname"
                     android:inputType="text"
+                    android:maxLength="50"
                     android:lines="1"
                     android:maxLines="1">
 
@@ -142,6 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/city"
+                    android:maxLength="80"
                     android:inputType="text"
                     android:lines="1"
                     android:maxLines="1"/>
@@ -157,6 +160,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/country"
+                    android:maxLength="80"
                     android:inputType="text"
                     android:lines="1"
                     android:maxLines="1">
@@ -175,6 +179,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/education"
                     android:inputType="text"
+                    android:maxLength="100"
                     android:lines="1"
                     android:maxLines="1">
 
@@ -191,6 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/description"
+                    android:maxLength="500"
                     android:maxLines="5">
 
                 </com.google.android.material.textfield.TextInputEditText>

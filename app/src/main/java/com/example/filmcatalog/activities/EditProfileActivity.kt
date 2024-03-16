@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.filmcatalog.R
 import com.example.filmcatalog.databinding.ActivityEditProfileBinding
 import com.example.filmcatalog.models.User
+import com.example.filmcatalog.utils.ValidationUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -75,29 +76,31 @@ class EditProfileActivity : AppCompatActivity() {
         val education = binding.editProfileEducation.text.toString()
         val description = binding.editProfileDescription.text.toString()
 
-
-        val savedUser = User(
-            user.email,
-            user.password,
-            name,
-            lastname,
-            dateBirth,
-            city,
-            country,
-            gender,
-            education,
-            description
-        )
-        collectionReference.document(user.email).set(savedUser)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Toast.makeText(this, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show()
+        if (ValidationUtil.validateName(this, name)) {
+            val savedUser = User(
+                user.email,
+                user.password,
+                name,
+                lastname,
+                dateBirth,
+                city,
+                country,
+                gender,
+                education,
+                description
+            )
+            collectionReference.document(user.email).set(savedUser)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Toast.makeText(this, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
-            }
+                .addOnFailureListener {
+                    Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+                }
+        }
     }
+
 
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(

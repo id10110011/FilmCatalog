@@ -1,11 +1,11 @@
 package com.example.filmcatalog.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.filmcatalog.databinding.ActivityLoginBinding
+import com.example.filmcatalog.utils.ValidationUtil
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -29,36 +29,25 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.loginEmail.text.toString()
             val password = binding.loginPassword.text.toString()
 
-            if (validateEmail(email) && validatePassword(password)) {
+            if (ValidationUtil.validateEmail(this, email) &&
+                ValidationUtil.validatePassword(this, password)
+            ) {
                 firebaseAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) {task ->
+                    .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Вы вошли в аккаунт", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {
-                            Toast.makeText(this, "Некорректная электронная почта или пароль", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "Некорректная электронная почта или пароль",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
             }
         }
     }
 
-    private fun validateEmail(email: String): Boolean {
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Некорректная электронная почта", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
-    }
-
-    private fun validatePassword(password: String): Boolean {
-        if (password.isEmpty()) {
-            Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
-    }
 }
