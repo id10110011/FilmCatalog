@@ -83,8 +83,8 @@ class RateMovieActivity : AppCompatActivity() {
                             }
                         }
                         reviews.add(review)
-                        movie.countRating()
                         movie.reviews = reviews
+                        movie.countRating()
                         db.collection("movies").document(movieDocName).set(movie)
                             .addOnCompleteListener {
                                 finish()

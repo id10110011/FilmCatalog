@@ -15,12 +15,14 @@ import com.example.filmcatalog.R
 import com.example.filmcatalog.adapters.ImageAdapter
 import com.example.filmcatalog.adapters.ReviewsAdapter
 import com.example.filmcatalog.databinding.ActivityMovieBinding
+import com.example.filmcatalog.models.Movie
 import com.example.filmcatalog.models.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.toObject
 
 class MovieActivity : AppCompatActivity() {
 
@@ -39,6 +41,7 @@ class MovieActivity : AppCompatActivity() {
     private lateinit var userEmail: String
     private lateinit var reviewsMap: List<Map<String, Any>>
     private lateinit var reviews: List<Review>
+    private lateinit var movie: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,15 +72,21 @@ class MovieActivity : AppCompatActivity() {
         db.collection(collectionMovies).document(docName).get(Source.DEFAULT)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
+                    movie = it.result.toObject(Movie::class.java)!!
                     if (it.result.get("reviews") != null) {
                         reviewsMap = it.result.get("reviews") as List<Map<String, Any>>
                         reviews = convertMapToArrayList(reviewsMap)
                     }
+                    setMovieRating()
                     setUserReview()
                 }
-
             }
+    }
 
+    private fun setMovieRating() {
+        binding.ratingAndReviewsContainer.movieRatingBar.rating = movie.rating
+        binding.ratingAndReviewsContainer.movieRatingCount.text = reviews.size.toString()
+        binding.ratingAndReviewsContainer.movieRatingText.text = movie.rating.toString()
     }
 
     private fun setUserReview() {
@@ -156,7 +165,7 @@ class MovieActivity : AppCompatActivity() {
         binding.userReview.reviewItemEdit.setOnClickListener {
             startRateMovieActivity()
         }
-        binding.showReviewsButton.setOnClickListener {
+        binding.ratingAndReviewsContainer.showReviewsButton.setOnClickListener {
             val intent = Intent(this, ReviewsActivity::class.java)
             intent.putExtra("movieDocName", docName)
             startActivity(intent)

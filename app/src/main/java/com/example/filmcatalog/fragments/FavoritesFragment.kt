@@ -101,9 +101,5 @@ class FavoritesFragment : Fragment() {
                     catalogAdapter.notifyDataSetChanged()
                 }
             }
-            .addOnFailureListener {
-                Toast.makeText(activity, it.localizedMessage, Toast.LENGTH_LONG)
-                    .show()
-            }
     }
 }

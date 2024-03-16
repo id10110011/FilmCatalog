@@ -165,30 +165,8 @@
             </androidx.cardview.widget.CardView>
             <include layout="@layout/user_review"
                 android:id="@+id/user_review" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Оценки и отзывы"
-                android:textSize="25sp"
-                android:paddingHorizontal="20dp"
-                />
-            <androidx.cardview.widget.CardView
-                android:id="@+id/show_reviews_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginVertical="5dp"
-                app:cardCornerRadius="10dp" >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Посмотреть все отзывы"
-                    android:textSize="25sp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="5dp"
-                    />
-            </androidx.cardview.widget.CardView>
-
+            <include layout="@layout/rating_and_reviews"
+                android:id="@+id/rating_and_reviews_container"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
