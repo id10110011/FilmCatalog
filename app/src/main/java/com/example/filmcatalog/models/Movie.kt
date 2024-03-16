@@ -3,7 +3,7 @@ package com.example.filmcatalog.models
 class Movie {
     lateinit var name: String
     lateinit var description: String
-    lateinit var pictureNames: ArrayList<String>
+    var pictureNames = ArrayList<String>()
     var reviews = ArrayList<Review>()
     var rating: Float = 0.0f
 

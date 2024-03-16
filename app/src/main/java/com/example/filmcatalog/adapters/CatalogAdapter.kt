@@ -34,6 +34,8 @@ class CatalogAdapter(context: Context, movies: ArrayList<Movie>) :
                 .load(Uri.parse(movie.pictureNames[0]))
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(gridImage)
+        } else {
+            gridImage.setImageResource(R.drawable.ic_theaters)
         }
 
         gridCaption.text = movie.name + "\n"

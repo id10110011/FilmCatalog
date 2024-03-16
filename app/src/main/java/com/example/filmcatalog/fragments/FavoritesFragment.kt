@@ -92,12 +92,14 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun initMovie(documentReference: DocumentReference) {
-        db.document(documentReference.path).get(Source.DEFAULT)
+        documentReference.get(Source.DEFAULT)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     docNames.add(it.result.id)
                     val movie = it.result.toObject(Movie::class.java)
-                    movies.add(Movie(movie!!))
+                    if (movie != null) {
+                        movies.add(Movie(movie))
+                    }
                     catalogAdapter.notifyDataSetChanged()
                 }
             }
