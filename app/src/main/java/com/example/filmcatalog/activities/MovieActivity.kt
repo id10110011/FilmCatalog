@@ -157,13 +157,13 @@ class MovieActivity : AppCompatActivity() {
             finish()
         }
         binding.rateMovieBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
-            startRateMovieActivity()
+            startRateMovieActivity(false)
         }
         binding.rateMovieReview.setOnClickListener {
-            startRateMovieActivity()
+            startRateMovieActivity(false)
         }
         binding.userReview.reviewItemEdit.setOnClickListener {
-            startRateMovieActivity()
+            startRateMovieActivity(true)
         }
         binding.ratingAndReviewsContainer.showReviewsButton.setOnClickListener {
             val intent = Intent(this, ReviewsActivity::class.java)
@@ -192,11 +192,15 @@ class MovieActivity : AppCompatActivity() {
         }
     }
 
-    private fun startRateMovieActivity() {
+    private fun startRateMovieActivity(isEditing: Boolean) {
         val intent = Intent(this, RateMovieActivity::class.java)
         intent.putExtra("movieDoc", docName)
         intent.putExtra("text", binding.userReview.reviewItemText.text.toString())
-        intent.putExtra("rating", binding.userReview.reviewItemRating.rating)
+        if (isEditing) {
+            intent.putExtra("rating", binding.userReview.reviewItemRating.rating)
+        } else {
+            intent.putExtra("rating", binding.rateMovieBar.rating)
+        }
         startActivity(intent)
     }
 
