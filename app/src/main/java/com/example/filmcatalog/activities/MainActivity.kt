@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        binding.progressBar.visibility = View.GONE
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
     }
 
