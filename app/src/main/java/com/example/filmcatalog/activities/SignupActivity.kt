@@ -54,7 +54,7 @@ class SignupActivity : AppCompatActivity() {
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) {task ->
                     if (task.isSuccessful) {
-                        val user = User(email, password, name)
+                        val user = User(email, name)
                         collectionRef.document(user.email).set(user)
                             .addOnCompleteListener {
                                 if (it.isSuccessful) {

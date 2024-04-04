@@ -79,7 +79,6 @@ class EditProfileActivity : AppCompatActivity() {
         if (ValidationUtil.validateName(this, name)) {
             val savedUser = User(
                 user.email,
-                user.password,
                 name,
                 lastname,
                 dateBirth,

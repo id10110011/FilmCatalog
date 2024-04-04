@@ -32,6 +32,7 @@ class CatalogFragment : Fragment() {
 
     private lateinit var storage: FirebaseStorage
     private lateinit var movies: ArrayList<Movie>
+    private lateinit var filteredMovies: ArrayList<Movie>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,23 +62,25 @@ class CatalogFragment : Fragment() {
                     for (doc in it.result) {
                         docNames.add(doc.id)
                         val movie = doc.toObject(Movie::class.java)
+                        movie.docName = doc.id;
                         movies.add(Movie(movie))
                     }
 
                     if (isAdded) {
+                        filteredMovies = movies.clone() as ArrayList<Movie>;
                         catalogAdapter = CatalogAdapter(
                             requireActivity(),
-                            movies.clone() as ArrayList<Movie>
+                            filteredMovies
                         )
                         binding.gridView.adapter = catalogAdapter
                         binding.gridView.isClickable = true
                         binding.gridView.onItemClickListener =
                             AdapterView.OnItemClickListener { adapterView, view, i, l ->
                                 val intent = Intent(activity, MovieActivity::class.java)
-                                intent.putExtra("name", movies[i].name)
-                                intent.putExtra("description", movies[i].description)
-                                intent.putStringArrayListExtra("pictureNames", movies[i].pictureNames)
-                                intent.putExtra("docName", docNames[i])
+                                intent.putExtra("name", filteredMovies[i].name)
+                                intent.putExtra("description", filteredMovies[i].description)
+                                intent.putStringArrayListExtra("pictureNames", filteredMovies[i].pictureNames)
+                                intent.putExtra("docName", filteredMovies[i].docName)
 
                                 startActivity(intent)
                             }

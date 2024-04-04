@@ -1,8 +1,11 @@
 package com.example.filmcatalog.models
 
+import com.google.firebase.firestore.DocumentReference
+
 class Movie {
     lateinit var name: String
     lateinit var description: String
+    var docName: String = "";
     var pictureNames = ArrayList<String>()
     var reviews = ArrayList<Review>()
     var rating: Float = 0.0f
@@ -20,6 +23,7 @@ class Movie {
         this.name = movie.name
         this.description = movie.description
         this.pictureNames = movie.pictureNames
+        this.docName = movie.docName
         this.reviews = movie.reviews
     }
 

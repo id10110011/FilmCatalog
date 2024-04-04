@@ -47,7 +47,7 @@ class ValidationUtil {
         }
 
         fun validatePasswords(context: Context, password: String, rePassword: String): Boolean {
-            if (validatePassword(context, password)) {
+            if (!validatePassword(context, password)) {
                 return false
             }
             if (password != rePassword) {

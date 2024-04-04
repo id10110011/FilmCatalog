@@ -98,6 +98,7 @@ class FavoritesFragment : Fragment() {
                     docNames.add(it.result.id)
                     val movie = it.result.toObject(Movie::class.java)
                     if (movie != null) {
+                        movie.docName = it.result.id
                         movies.add(Movie(movie))
                     }
                     catalogAdapter.notifyDataSetChanged()
